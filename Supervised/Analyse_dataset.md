@@ -1,0 +1,11 @@
+# Analyse du dataset 
+
+- Les images des cerveaux sains permettent, et cela tombe sous le sens, de savoir si le patient n'a pas de tumeurs, et donc qu'il n'a pas besoin de recevoir des traitements contre le cancer.
+
+- Les images avec Glioma (Gliome en français), sont LES PLUS importantes à analyser. En effet, entraîner l'IA à reconnaître ce type de tumeurs, qui est l'une des plus dangereuses des tumeurs cérébrales, permettrait de les diagnostiquer bien plus vite. Les Gliomes sont l'ensemble des tumeurs cérébrales issues du "tissu de soutien neuronal" ou "glie". Ils sont bien souvent malins, c'est-à-dire "cancéreux et rapides" (Grades 3/4 de la tumeur), signifiant qu'en à peine 6 mois ou jusqu'à 4 ans au maximum, elle sera fatale pour l'individu. La forme la plus commune de gliome est "le glioblastome", elle est de grade 4, signifiant la mort dans les 6 mois à 2 ans de l'individu concerné. Il est donc réellement nécessaire d'apprendre à diagnostiquer celui-ci le plus rapidement possible.
+
+- Les images avec Meningioma (un méningiome) sont très importantes à analyser, car c'est la tumeur primitive (première tumeur, point de départ d'un potentiel cancer) la plus fréquente du cerveau. Bien que 80 à 90% des cas soient bénins et soient tirés d'affaire 5 ans après être diagnostiqués, elle est la cause de 8 875 décès aux États-Unis. Comme son nom l'indique, elle se forme au niveau des méninges, se trouvant entre l'os du crâne et le cerveau.
+
+- Et enfin, les images avec Pituitary tumor (tumeur pituitaire ou tumeur hypophysaire) se trouvent à la base du cerveau, au niveau de la glande pituitaire (l'hypophyse). Elle est donc facilement identifiable. Ce type de tumeurs est majoritairement non cancérigène, elle n'en reste pas moins dangereuse mais potentiellement moins urgente à traiter que le Gliome.
+
+Ce dataset est donc parfait pour entraîner une IA sur cette problématique. En plus de permettre de détecter les tumeurs, notre IA sera capable de détecter le type de la tumeur, permettant de rediriger les patients au bon endroit et vers les bons traitements.
