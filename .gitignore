@@ -4,8 +4,8 @@ Bootstrap/
 
 Redaction_projet.md
 
-Supervised/Testing
+Dataset/
 
-Supervised/Training/
+*.zip
 
 *.npy
