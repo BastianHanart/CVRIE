@@ -91,7 +91,7 @@ Dans notre cas, le modèle Random Forest semble légèrement plus efficace avec 
 ## Unsupervised Learning 
 
 Et cette partie va se concentrer sur la deuxième étape, le Unsupervised Learning (Apprentissage non supervisé). 
-Le but de notre algorithme sera de faire une ...
+Le but de notre algorithme sera de regrouper les patients en différents groupes de symptômes afin de les prendre en charges plus rapidement et efficacement. 
 
 ### Dataset
 
@@ -117,28 +117,18 @@ Nous avons donc décider d'enlever les guillemts qui ne servait en rien à la bo
 
 ### Entrainement
 
-Pour entrainer l'IA, nous avons décider de faire 4 modèles différents : 
+Pour entrainer l'IA, nous avons décider de faire 3 modèles différents : 
 
-- Un KNN (K-nearests neighbords (K plus proche voisins)). Ce modèle sert à classer des données ou à prédire une valeur numérique. Et c'est justement ce que l'on veut ici, on veut que notre IA soit capable de classer des images en différentes catégorie de tumeurs. 
+- Un K-means, c'est un algorithme d'apprentissage automatique non supervisé qui permet de regrouper des données non labelisés en k groupes distincts appelés clusters en fonction de leur similarité.
 
-- Un Random Forest. Ici, il sert à faire des prédictions précises et robustes en combinant plusieurs arbres de décision. Un peu à l'instar du KNN, ce modèle essaye de prédire les catégorie de tumeurs à laquelle les images appartiennent.
+- 
 
-La différence entre les deux ? Le KNN, c'est un apprentissage paresseux. Il ne construit pas de modèle lors de l'entraînement. Pour prédire une valeur, il calcule la distance entre le nouveau point et tous les points d'entraînement. Alors que le Random Forest est une méthode d'ensemble. Il crée une multitude d'arbres de décision pendant l'entraînement en introduisant de l'aléa. La prédiction finale est obtenue par vote majoritaire.
 
-- Un SVM
+- 
 
-- Un Logistic Regression
+Pour vérifier les différents résultat, ou s'assurer de la véracité des test, nosu effectuons des elbow method et des silhouette score qui permette de montrer le lien entre nombre de clusters et efficacité du projet.
 
-Pour chaque modèle, on fait une matrice de confusion qui nous permet de voir les résultats de ceux-ci. On y voit le nombre de fois ou le modèle à répondu correctement et les moments où il a répondu un mauvais type de tumeurs.
-
-Aussi, pour ce qui est de la séparation des données pour l'entrainement et les test, nous faisons un 80/20.
-
-Pourquoi ? Notre quantité de valeurs présente est de 5600 images, pour avoir assez d'élémént d'entrainement tout en gardant une bonne quantité de test, 80/20 et donc 4480 images d'entrainement et 1120 images de tests restent un des meilleurs ratio pour notre problème. 
 ### Comparaison et Conclusion
 
-Enfin, nous comparons tous les modèles afin de voir lequel est le plus efficace dans notre cas. Nous comparons leurs résultats et voyons danns quels cas ils ont eu de meilleurs prédictions et où ils ont pu se tromper. 
 
-Ce qui nous permet ensuite de conclure sur le choix à faire pour prédire au mieux la présence de tumeurs dans le cerveau des patients.
-
-Dans notre cas, le modèle Random Forest semble légèrement plus efficace avec un résultat de 0.91152 sur les images de dimensions (512,512)
 
