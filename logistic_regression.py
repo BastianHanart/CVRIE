@@ -1,94 +1,55 @@
-from pathlib import Path
+# gestion d'erreur 
+# gerer pour 4 classes et non 2
 import numpy as np
-from PIL import Image
-from sklearn.linear_model import LogisticRegression
 
-# Pourcentage de raison : accuracy = nombre de bonnes prédictions / nombre total de prédictions
-# Presicion global : presision, recall (faux negatif), f-1 score (permet de rattraper en cas de trop gros écart)
-from sklearn.metrics import accuracy_score, classification_report
+# compression de valeur entre 0 et 1
+def sigmoid(score):
+    return 1 / (1 + np.exp(-score))
 
-# Entrainement / test
-from sklearn.model_selection import train_test_split
+# Fonction d'erreur
+def compute_loss(vrai_label, prediction):
+    epsilon = 1e-15
+    # rester strictement entre 0 et 1 pour éviter log(0)
+    prediction = np.clip(prediction, epsilon, 1 - epsilon)
+    # Moyenne de toute les erreurs et (-) car le log d'un nombre entre 0 et 1 est toujours négatif
+    return -np.mean(vrai_label * np.log(prediction) + (1 - vrai_label) * np.log(1 - prediction))
 
-dataset_path = Path("./archive/Training")
-# glioma = 0, meningioma = 1, ...
-labels_name = [
-    "glioma",
-    "meningioma",
-    "notumor",
-    "pituitary"
-]
-
-def load_data():
-    # Image = tableau de pixel, Labels = numéro de classe
-    images = []
-    labels = []
-
-    # label_id=0, label_name="glioma"
-    for label_id, label_name in enumerate(labels_name):
-        folder = dataset_path / label_name
-
-        # si dossier existe pas, crash pas et passe à la suite
-        if not folder.exists():
-            print(f"Dossier manquant : {folder}")
-            continue
+def train_logistic_regression(images, labels, learning_rate=0.01, n_iterations=1000):
+    nb_images, nb_features = images.shape
+    
+    # Initialiser les poids à zéro
+    # formule de la regression logistic : z=X⋅weights+bias
+    weights = np.zeros(nb_features)
+    bias = 0
+    
+    for i in range(n_iterations):
+        # Prédiction
+        score = np.dot(images, weights) + bias
+        # Probabilité de la prédiction
+        predictions = sigmoid(score)
         
-        # Prend tout les .jpg
-        for file in folder.glob("*.jpg"):
-            # Pillow charge l'image 
-            image = Image.open(file)
-            # Transforme l'image en tableau de nb entre 0.0 et 1.0
-            image = np.array(image, dtype=np.float32) / 255.0
-            # ajout à la list d'image 
-            images.append(image)
-            # ajout à la list des labels
-            labels.append(label_id)   
-    # converti les list en tabl      
-    return np.array(images), np.array(labels)
+        # Ont prend la transposé des matrice pour avoir 2 matrice de même dimenssion
+        weights_gradient = (1 / nb_images) * np.dot(images.T, (predictions - labels)) # Addition des erreurs 
+        bias_gradient = (1 / nb_images) * np.sum(predictions - labels) # correstion des poids
+        
+        # Mise à jour des poids
+        weights -= learning_rate * weights_gradient
+        bias -= learning_rate * bias_gradient
+        
+        # Apprentissage du modèle, plus le nb descend plus le modèle apprend de ses errers
+        if i % 100 == 0:
+            loss = compute_loss(labels, predictions) # Modèle = juste ? Eloigné ? 
+            print(f"Iteration {i}: Loss = {loss:.4f}")
+    
+    return weights, bias
 
-# entrainement et labels
-def train_model(x_train, y_train):
-    # Créer et entrainé le modèle
-    # pas d'aléatoire et si image en moins grand nombre elles compte plus
-    classifier = LogisticRegression(max_iter=1000, random_state=0, class_weight="balanced")
-    # entrainement et prédiction
-    classifier.fit(x_train, y_train)
-    return classifier
+# Connaissance du modèle
+weights, bias = train_logistic_regression(X_valid, y_valid_encoded)
 
-# vrai label, vrai prédiction
-def display_results(y_true, y_pred):
-    score = accuracy_score(y_true, y_pred)
-    print("\nRésultat")
-    print(f"Précision : {score * 100:.2f}%")
-    print("\nRapport détaillé")
-    # precision, recall, f-1 score
-    print(classification_report(y_true, y_pred, target_names=labels_name))
+# Prédiction du modèle
+def predict(images, weights, bias):
+    score = np.dot(images, weights) + bias # score
+    predictions = sigmoid(score) # Proba
+    return np.round(predictions)  # Arondi
 
-def main():
-    if not dataset_path.exists():
-        print("Les données prétraitées sont introuvables.")
-        return 84
-
-    print("Chargement des données")
-    images, labels = load_data()
-
-    if len(images) == 0:
-        print("Aucune donnée disponible")
-        return 84
-
-    print(f"{len(images)} images chargées")
-    # Transformation des images en vecteurs pour sickit-learn
-    features = images.reshape(images.shape[0], -1) 
-    # égalité des images 
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=0, stratify=labels)
-
-    print(f"Jeu d'entraînement : {len(x_train)} images")
-    print(f"Jeu de test : {len(x_test)} images")
-    print("\nEntraînement du modèle")
-    model = train_model(x_train, y_train)
-    predictions = model.predict(x_test)
-    display_results(y_test, predictions)
-    return 0
-
-if __name__ == "__main__":
-    exit(main())
+predictions = predict(X_test, weights, bias)
