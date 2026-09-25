@@ -3,3 +3,14 @@ venv/
 *Zone.Identifier
 archive/
 processed/
+
+Bootstrap/
+
+Redaction_projet.md
+
+Dataset/
+Dataset_clean/
+
+*.zip
+
+*.npy
